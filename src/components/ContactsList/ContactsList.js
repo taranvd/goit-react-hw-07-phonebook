@@ -1,3 +1,4 @@
+import { getContacts, getFilter } from 'redux/selectors';
 import {
   ButtonClearAll,
   ButtonStyled,
@@ -5,12 +6,11 @@ import {
   ListItem,
 } from './ContactsList.style';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from 'redux/contactsSlice';
-import { clearAll } from 'redux/contactsSlice';
+import { removeContact } from 'redux/operations';
 
 export const ContactsList = () => {
-  const filter = useSelector(state => state.filter);
-  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(getFilter);
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const visibleContacts = contacts.filter(contact =>
@@ -23,16 +23,12 @@ export const ContactsList = () => {
         <ListItem key={contact.id}>
           <span style={{ textAlign: 'center' }}>{contact.name} </span>
           <span style={{ textAlign: 'center' }}>{contact.number}</span>
-          <ButtonStyled onClick={() => dispatch(deleteContact(contact.id))}>
+          <ButtonStyled onClick={() => dispatch(removeContact(contact.id))}>
             Delete
           </ButtonStyled>
         </ListItem>
       ))}
-      {contacts.length >= 3 && (
-        <ButtonClearAll onClick={() => dispatch(clearAll())}>
-          Clear all
-        </ButtonClearAll>
-      )}
+      <ButtonClearAll>Clear all</ButtonClearAll>
     </List>
   );
 };

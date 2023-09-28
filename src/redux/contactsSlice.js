@@ -1,55 +1,56 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { addContact, fetchContacts, removeContact } from './operations';
+
+const initialState = {
+  contacts: [],
+  isLoading: false,
+  error: null,
+};
 
 const slice = createSlice({
   name: 'contacts',
-  initialState: [],
-  reducers: {
-    setContact(state, action) {
-      state.push(action.payload);
+  initialState: initialState,
+  extraReducers: {
+    [fetchContacts.pending](state, action) {
+      state.isLoading = true;
     },
-    deleteContact(state, action) {
-      const index = state.findIndex(task => task.id === action.payload);
-      state.splice(index, 1);
+    [fetchContacts.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.contacts = action.payload;
     },
-    clearAll() {
-      return [];
+    [fetchContacts.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [addContact.pending](state, action) {
+      state.isLoading = true;
+    },
+    [addContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.contacts.push(action.payload);
+    },
+    [addContact.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [removeContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.contacts = state.contacts.filter(
+        contact => contact.id !== action.payload
+      );
+    },
+    [removeContact.pending](state, action) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    [removeContact.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
 
 export const contactReducer = slice.reducer;
-export const { setContact, deleteContact, clearAll } = slice.actions;
-
-// import { createAction } from '@reduxjs/toolkit';
-// import { createReducer } from '@reduxjs/toolkit';
-
-// export const setContact = createAction('contacts/setContact');
-// export const deleteContact = createAction('contacts/deleteContact');
-// export const clearAll = createAction('contacts/clearAll');
-
-// export const contactReducer = createReducer([], {
-//   [setContact]: (state, action) => {
-//     state.push(action.payload);
-//   },
-//   [deleteContact]: (state, action) => {
-//     const index = state.findIndex(task => task.id === action.payload);
-//     state.splice(index, 1);
-//   },
-//   [clearAll]: () => [],
-// });
-
-// export const contactsReducer = (state = [], action) => {
-//   switch (action.type) {
-//     case setContact.type:
-//       return [...state, action.payload];
-
-//     case deleteContact.type:
-//       return state.filter(contact => contact.id !== action.payload);
-
-//     case clearAll.type:
-//       return [];
-
-//     default:
-//       return state;
-//   }
-// };
