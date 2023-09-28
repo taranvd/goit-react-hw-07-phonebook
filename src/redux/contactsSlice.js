@@ -11,9 +11,7 @@ const slice = createSlice({
   name: 'contacts',
   initialState: initialState,
   reducers: {
-    clearAll: state => {
-      return { ...state, contacts: [] };
-    },
+    clearAll: state => (state.contacts = []),
   },
   extraReducers: {
     [fetchContacts.pending](state, action) {
@@ -43,11 +41,9 @@ const slice = createSlice({
     [removeContact.fulfilled](state, action) {
       state.isLoading = false;
       state.error = null;
-
-      const index = state.contacts.findIndex(
-        contact => contact.id === action.payload
+      state.contacts = state.contacts.filter(
+        contact => contact.id !== action.payload.id
       );
-      state.contacts.splice(index, 1);
     },
     [removeContact.pending](state, action) {
       state.isLoading = true;
