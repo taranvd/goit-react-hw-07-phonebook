@@ -8,6 +8,7 @@ import {
 } from './ContactsList.style';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts, removeContact } from 'redux/operations';
+import { clearAll } from 'redux/contactsSlice';
 
 export const ContactsList = () => {
   const filter = useSelector(getFilter);
@@ -37,7 +38,9 @@ export const ContactsList = () => {
           </ButtonStyled>
         </ListItem>
       ))}
-      <ButtonClearAll>Clear all</ButtonClearAll>
+      <ButtonClearAll onClick={() => dispatch(clearAll())}>
+        Clear all
+      </ButtonClearAll>
     </List>
   );
 };
