@@ -43,6 +43,7 @@ const slice = createSlice({
     [removeContact.fulfilled](state, action) {
       state.isLoading = false;
       state.error = null;
+
       const index = state.contacts.findIndex(
         contact => contact.id === action.payload
       );
